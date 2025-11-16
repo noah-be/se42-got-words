@@ -2,6 +2,10 @@ import re
 from itertools import chain
 from collections import Counter
 import pandas as pd
+import nltk
+from nltk.corpus import stopwords
+
+
 
 
 def tokenize(text: str):
@@ -22,3 +26,16 @@ def build_frequency(df: pd.DataFrame, tokens_col: str = "tokens"):
         .reset_index(drop=True)
     )
     return freq_df, all_tokens
+
+
+
+
+def load_stopwords():
+    nltk.download("stopwords")
+    return set(stopwords.words("english"))
+
+def apply_stopwords(freq_df, stopwords_set):
+    return (
+        freq_df[~freq_df["word"].isin(stopwords_set)]
+        .reset_index(drop=True)
+    )
